@@ -4,7 +4,7 @@ import { songs } from "@/content/conference";
 import { Container, PageHeader } from "@/components/ui";
 import { IconChevron } from "@/components/icons";
 
-export const metadata: Metadata = { title: "Песни прославления" };
+export const metadata: Metadata = { title: "Прославление" };
 
 export default function SongsPage() {
   return (

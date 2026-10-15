@@ -29,7 +29,7 @@ export default async function SongPage({ params }: Props) {
 
   return (
     <>
-      <PageHeader title={s.title} lead={s.author} back={{ href: "/songs/", label: "Все песни" }} />
+      <PageHeader title={s.title} lead={s.author} back={{ href: "/songs/", label: "Прославление" }} />
       <Container className="max-w-2xl py-6 lg:py-10">
         {stanzas.length ? (
           <div className="space-y-7 text-[1.25rem] leading-[1.6] sm:text-2xl">

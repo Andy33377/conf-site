@@ -8,7 +8,7 @@ const tabs = [
   { href: "/", label: "Главная", Icon: IconHome },
   { href: "/program/", label: "Программа", Icon: IconClock },
   { href: "/masterclasses/", label: "Классы", Icon: IconGrid },
-  { href: "/songs/", label: "Песни", Icon: IconMusic },
+  { href: "/songs/", label: "Прославление", Icon: IconMusic },
 ];
 
 /** Нижняя панель как в приложении — только на телефонах */
