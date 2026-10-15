@@ -13,7 +13,7 @@ import "@fontsource-variable/inter/wght.css";
 
 export const metadata: Metadata = {
   // Замените на реальный домен после публикации — нужен для превью в мессенджерах
-  metadataBase: new URL("https://example.com"),
+  metadataBase: new URL("https://conf.vercel.app"),
   title: {
     default: `${conference.title} — ${conference.label}`,
     template: `%s · ${conference.title}`,
