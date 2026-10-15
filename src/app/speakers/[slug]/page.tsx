@@ -29,7 +29,7 @@ export default async function SpeakerPage({ params }: Props) {
     <>
       <PageHeader title={`${s.firstName} ${s.lastName}`} lead={s.church} back={{ href: "/#speakers", label: "Спикеры" }} />
       <Container className="grid gap-8 py-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14 lg:py-10">
-        <div className={`relative isolate overflow-hidden rounded-2xl ${i ? "bg-speaker-grey" : "bg-speaker-ochre"}`}>
+        <div className="relative isolate overflow-hidden rounded-2xl bg-speaker-beige">
           <span className="absolute inset-0 -z-10 halftone-soft opacity-25" aria-hidden />
           <img
             src={s.photo}

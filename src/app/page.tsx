@@ -73,9 +73,9 @@ export default function Home() {
           <Collage variant="a">
             <img
               src="/img/about.webp"
-              alt="Молодёжь на служении с поднятыми руками"
-              width={682}
-              height={304}
+              alt="Открытая Библия на деревянном пирсе у озера на рассвете"
+              width={1000}
+              height={500}
               loading="lazy"
               decoding="async"
               className="photo-bw aspect-[16/8] w-full rounded-sm object-cover"
@@ -92,9 +92,9 @@ export default function Home() {
       <Section id="speakers" className="bg-paper-2/60">
         <SectionHead title="Спикеры" />
         <div className="grid gap-6 sm:grid-cols-2 lg:gap-10">
-          {speakers.map((s, i) => (
+          {speakers.map((s) => (
             <Link key={s.slug} href={`/speakers/${s.slug}/`} className="group block overflow-hidden rounded-2xl bg-white">
-              <div className={`relative isolate overflow-hidden ${i ? "bg-speaker-grey" : "bg-speaker-ochre"}`}>
+              <div className="relative isolate overflow-hidden bg-speaker-beige">
                 <span className="absolute inset-0 -z-10 halftone-soft opacity-25" aria-hidden />
                 <img
                   src={s.photo}
@@ -231,9 +231,9 @@ export default function Home() {
           <Collage variant="b" className="relative">
             <img
               src="/img/worship.webp"
-              alt="Группа прославления на сцене"
-              width={768}
-              height={344}
+              alt="Гитары и клавишные в светлой комнате"
+              width={1000}
+              height={500}
               loading="lazy"
               decoding="async"
               className="photo-bw aspect-[16/8] w-full rounded-sm object-cover"
