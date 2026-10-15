@@ -82,6 +82,21 @@
   mask-image: linear-gradient(135deg, #000 10%, transparent 75%);
 }
 
+/* Фоны спикеров: мягкий вертикальный градиент */
+@utility bg-speaker-ochre {
+  background-image: linear-gradient(180deg, #d6a55c 0%, #e2bb7f 55%, #ecd0a3 100%);
+}
+@utility bg-speaker-grey {
+  background-image: linear-gradient(180deg, #a3a8ad 0%, #b7bbbf 55%, #cdd0d3 100%);
+}
+/* Точки, плавно исчезающие сверху вниз */
+@utility halftone-soft {
+  background-image: radial-gradient(var(--color-ink) 1.1px, transparent 1.4px);
+  background-size: 6px 6px;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, rgb(0 0 0 / 0.5) 35%, transparent 80%);
+  mask-image: linear-gradient(180deg, #000 0%, rgb(0 0 0 / 0.5) 35%, transparent 80%);
+}
+
 /* Ч/б фото в стиле коллажа */
 @utility photo-bw {
   filter: grayscale(1) contrast(1.15) brightness(1.02);

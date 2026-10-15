@@ -98,12 +98,8 @@ export default function Home() {
         <div className="grid gap-6 sm:grid-cols-2 lg:gap-10">
           {speakers.map((s, i) => (
             <Link key={s.slug} href={`/speakers/${s.slug}/`} className="group block overflow-hidden rounded-2xl bg-white">
-              <div className={`relative isolate overflow-hidden ${i ? "bg-mist" : "bg-ochre"}`}>
-                <span className="absolute inset-0 -z-10 halftone-fade opacity-30" aria-hidden />
-                <span
-                  className={`absolute bottom-0 -z-10 h-2/3 w-1/4 ${i ? "left-0 bg-ochre/70" : "right-0 bg-mist/80"}`}
-                  aria-hidden
-                />
+              <div className={`relative isolate overflow-hidden ${i ? "bg-speaker-grey" : "bg-speaker-ochre"}`}>
+                <span className="absolute inset-0 -z-10 halftone-soft opacity-25" aria-hidden />
                 <img
                   src={s.photo}
                   alt={`${s.firstName} ${s.lastName}`}
