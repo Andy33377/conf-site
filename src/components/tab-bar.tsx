@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IconClock, IconGrid, IconHome, IconInfo, IconMusic } from "./icons";
+import { IconClock, IconGrid, IconHome, IconMusic } from "./icons";
 
 const tabs = [
   { href: "/", label: "Главная", Icon: IconHome },
   { href: "/program/", label: "Программа", Icon: IconClock },
   { href: "/masterclasses/", label: "Классы", Icon: IconGrid },
   { href: "/songs/", label: "Песни", Icon: IconMusic },
-  { href: "/info/", label: "Инфо", Icon: IconInfo },
 ];
 
 /** Нижняя панель как в приложении — только на телефонах */
@@ -22,7 +21,7 @@ export function TabBar() {
       aria-label="Быстрая навигация"
       className="pb-safe fixed inset-x-0 bottom-0 z-50 border-t border-line bg-paper/95 backdrop-blur-md lg:hidden"
     >
-      <ul className="mx-auto grid max-w-lg grid-cols-5">
+      <ul className="mx-auto grid max-w-lg grid-cols-4">
         {tabs.map(({ href, label, Icon }) => {
           const active = href === "/" ? norm === "/" : norm.startsWith(href);
           return (
