@@ -41,11 +41,6 @@ export const conference = {
     { role: "Организатор", name: "Имя уточняется", phone: "+373 000 00 000" },
     { role: "Регистрация", name: "Имя уточняется", phone: "+373 000 00 000" },
   ],
-  socials: [
-    { name: "Instagram", url: "#" },
-    { name: "Telegram", url: "#" },
-    { name: "YouTube", url: "#" },
-  ],
 } as const;
 
 export type ScheduleItem = {

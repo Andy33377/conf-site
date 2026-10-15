@@ -6,7 +6,7 @@ import { Logo, nav } from "./header";
 export function Footer() {
   return (
     <footer className="border-t border-line bg-paper-2/60 pt-10 pb-28 lg:pb-12">
-      <Container className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+      <Container>
         <div>
           <Logo />
           <p className="mt-4 text-sm text-muted">
@@ -23,17 +23,6 @@ export function Footer() {
               </li>
             ))}
           </ul>
-        </div>
-        <div className="flex gap-3">
-          {conference.socials.map((s) => (
-            <a
-              key={s.name}
-              href={s.url}
-              className="rounded-full border border-line px-4 py-2 text-sm font-semibold hover:border-cobalt hover:text-cobalt"
-            >
-              {s.name}
-            </a>
-          ))}
         </div>
       </Container>
     </footer>
