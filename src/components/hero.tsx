@@ -63,7 +63,6 @@ export function Hero() {
               title={conference.city}
               sub={conference.venue}
               className="col-span-2 lg:col-span-1"
-              href="/info/#location"
             />
           </div>
         </div>

@@ -8,7 +8,6 @@ export const nav = [
   { href: "/program/", label: "Программа" },
   { href: "/masterclasses/", label: "Мастер-классы" },
   { href: "/songs/", label: "Прославление" },
-  { href: "/info/", label: "Участнику" },
 ];
 
 export function Logo({ className = "" }: { className?: string }) {

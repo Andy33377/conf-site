@@ -11,9 +11,7 @@ import {
   IconCheck,
   IconClock,
   IconGrid,
-  IconInfo,
   IconMusic,
-  IconPin,
   IconUsers,
 } from "@/components/icons";
 
@@ -21,8 +19,6 @@ const quick = [
   { href: "/program/", label: "Программа", Icon: IconClock },
   { href: "/masterclasses/", label: "Мастер-классы", Icon: IconGrid },
   { href: "/songs/", label: "Прославление", Icon: IconMusic },
-  { href: "/info/#location", label: "Как добраться", Icon: IconPin },
-  { href: "/info/#faq", label: "Вопросы", Icon: IconInfo },
   { href: "/#speakers", label: "Спикеры", Icon: IconUsers },
 ];
 
@@ -37,7 +33,7 @@ export default function Home() {
           <LiveNow />
           <div className="grid content-start gap-3">
             <MyPlan />
-            <nav aria-label="Разделы" className="grid grid-cols-3 gap-2 sm:grid-cols-6 lg:grid-cols-3">
+            <nav aria-label="Разделы" className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2">
               {quick.map(({ href, label, Icon }) => (
                 <Link
                   key={href}
