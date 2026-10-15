@@ -161,7 +161,7 @@ export const masterclasses: Masterclass[] = [
     host: "Гости из Германии",
     room,
     time: mcTime,
-    image: "/img/mc-craft.webp",
+    image: "/img/mc-leadership.webp",
   },
   {
     slug: "education",
@@ -173,7 +173,7 @@ export const masterclasses: Masterclass[] = [
     host: "Игорь Семёнов",
     room,
     time: mcTime,
-    image: "/img/mc-spirit.webp",
+    image: "/img/mc-education.webp",
   },
   {
     slug: "preaching",
@@ -185,7 +185,7 @@ export const masterclasses: Masterclass[] = [
     host: "Валентин Кирка",
     room,
     time: mcTime,
-    image: "/img/mc-music.webp",
+    image: "/img/mc-preaching.webp",
   },
   {
     slug: "media",
@@ -209,7 +209,7 @@ export const masterclasses: Masterclass[] = [
     host: "Жетта Георгиу",
     room,
     time: mcTime,
-    image: "/img/mc-sport.webp",
+    image: "/img/mc-children.webp",
   },
   {
     slug: "music",

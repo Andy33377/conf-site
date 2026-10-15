@@ -34,8 +34,8 @@ export default async function MasterclassPage({ params }: Props) {
           <img
             src={m.image}
             alt=""
-            width={244}
-            height={204}
+            width={960}
+            height={600}
             decoding="async"
             className="photo-bw aspect-[16/10] w-full rounded-sm object-cover"
           />

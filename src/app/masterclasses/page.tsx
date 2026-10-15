@@ -29,8 +29,8 @@ export default function MasterclassesPage() {
                   <img
                     src={m.image}
                     alt=""
-                    width={244}
-                    height={204}
+                    width={960}
+                    height={600}
                     loading="lazy"
                     decoding="async"
                     className="photo-bw aspect-square h-full w-full object-cover sm:aspect-[16/10]"

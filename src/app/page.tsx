@@ -168,8 +168,8 @@ export default function Home() {
                 <img
                   src={m.image}
                   alt=""
-                  width={244}
-                  height={204}
+                  width={960}
+                  height={600}
                   loading="lazy"
                   decoding="async"
                   className="photo-bw h-full w-full object-cover opacity-80 transition-transform duration-500 group-hover:scale-105"
