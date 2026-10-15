@@ -5,7 +5,7 @@ import { masterclasses } from "@/content/conference";
 import { Container, PageHeader } from "@/components/ui";
 import { Collage } from "@/components/deco";
 import { ChooseButton } from "@/components/my-plan";
-import { IconClock, IconPin, IconUsers } from "@/components/icons";
+import { IconArrow, IconClock, IconPin, IconUsers } from "@/components/icons";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -53,6 +53,30 @@ export default async function MasterclassPage({ params }: Props) {
           <div className="mt-7">
             <ChooseButton slug={m.slug} />
           </div>
+
+          <section className="mt-10">
+            <h2 className="display text-3xl">Материалы</h2>
+            {m.materials?.length ? (
+              <ul className="mt-3 divide-y divide-line overflow-hidden rounded-2xl bg-white">
+                {m.materials.map((f) => (
+                  <li key={f.url}>
+                    <a
+                      href={f.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex min-h-14 items-center justify-between gap-3 px-4 font-semibold hover:text-cobalt"
+                    >
+                      {f.title} <IconArrow className="size-4 shrink-0" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-3 rounded-2xl border-2 border-dashed border-line p-5 text-muted">
+                Презентации и конспекты от ведущего появятся здесь.
+              </p>
+            )}
+          </section>
         </div>
       </Container>
       <Container className="pb-12">

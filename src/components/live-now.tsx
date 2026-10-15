@@ -40,11 +40,11 @@ export function LiveNow() {
 
   if (state.kind === "after")
     return (
-      <Link href="/materials/" className={`${box} group`}>
+      <Link href="/masterclasses/" className={`${box} group`}>
         <p className="eyebrow text-sun">Конференция прошла</p>
         <p className="display mt-2 text-3xl text-white">Спасибо, что были с нами!</p>
         <p className="mt-2 flex items-center gap-1 text-sm text-paper/70">
-          Записи и материалы <IconArrow className="size-4 transition-transform group-hover:translate-x-1" />
+          Материалы мастер-классов <IconArrow className="size-4 transition-transform group-hover:translate-x-1" />
         </p>
       </Link>
     );

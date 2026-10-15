@@ -8,22 +8,22 @@ import { Collage, Scribble } from "@/components/deco";
 import { Button, Container, Section, SectionHead } from "@/components/ui";
 import {
   IconArrow,
-  IconBook,
   IconCheck,
   IconClock,
   IconGrid,
   IconInfo,
   IconMusic,
   IconPin,
+  IconUsers,
 } from "@/components/icons";
 
 const quick = [
   { href: "/program/", label: "Программа", Icon: IconClock },
   { href: "/masterclasses/", label: "Мастер-классы", Icon: IconGrid },
-  { href: "/songs/", label: "Песни", Icon: IconMusic },
+  { href: "/songs/", label: "Прославление", Icon: IconMusic },
   { href: "/info/#location", label: "Как добраться", Icon: IconPin },
   { href: "/info/#faq", label: "Вопросы", Icon: IconInfo },
-  { href: "/materials/", label: "Материалы", Icon: IconBook },
+  { href: "/#speakers", label: "Спикеры", Icon: IconUsers },
 ];
 
 export default function Home() {
@@ -60,6 +60,9 @@ export default function Home() {
           <div>
             <SectionHead title="О конференции" />
             <p className="max-w-lg text-[1.05rem] leading-relaxed">{conference.about}</p>
+            <h3 className="display mt-7 text-2xl text-terra">{conference.whyTitle}</h3>
+            <p className="mt-2 max-w-lg leading-relaxed">{conference.why}</p>
+            <p className="mt-4 max-w-lg leading-relaxed text-muted">{conference.newThisYear}</p>
             <ul className="mt-6 grid gap-2.5">
               {conference.highlights.map((h) => (
                 <li key={h} className="flex items-center gap-3">
@@ -94,11 +97,11 @@ export default function Home() {
         <SectionHead title="Спикеры" />
         <div className="grid gap-6 sm:grid-cols-2 lg:gap-10">
           {speakers.map((s, i) => (
-            <article key={s.slug} className="overflow-hidden rounded-2xl bg-white">
-              <div className={`relative isolate overflow-hidden ${i ? "bg-sun" : "bg-cobalt"}`}>
+            <Link key={s.slug} href={`/speakers/${s.slug}/`} className="group block overflow-hidden rounded-2xl bg-white">
+              <div className={`relative isolate overflow-hidden ${i ? "bg-mist" : "bg-ochre"}`}>
                 <span className="absolute inset-0 -z-10 halftone-fade opacity-30" aria-hidden />
                 <span
-                  className={`absolute bottom-0 -z-10 h-2/3 w-1/4 ${i ? "left-0 bg-cobalt" : "right-0 bg-sun"}`}
+                  className={`absolute bottom-0 -z-10 h-2/3 w-1/4 ${i ? "left-0 bg-ochre/70" : "right-0 bg-mist/80"}`}
                   aria-hidden
                 />
                 <img
@@ -123,8 +126,12 @@ export default function Home() {
                   ))}
                 </p>
                 <p className="mt-3 text-sm font-medium text-muted">{s.church}</p>
+                <p className="mt-4 flex items-center gap-1 text-sm font-semibold text-cobalt">
+                  {s.topic ? `Тема: ${s.topic}` : "Тема и основные мысли"}
+                  <IconArrow className="size-4 transition-transform group-hover:translate-x-1" />
+                </p>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </Section>

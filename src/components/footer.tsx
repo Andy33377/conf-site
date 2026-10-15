@@ -22,11 +22,6 @@ export function Footer() {
                 </Link>
               </li>
             ))}
-            <li>
-              <Link href="/materials/" className="text-ink/75 hover:text-cobalt">
-                Материалы
-              </Link>
-            </li>
           </ul>
         </div>
         <div className="flex gap-3">
