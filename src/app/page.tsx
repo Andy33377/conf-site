@@ -1,51 +1,22 @@
 import Link from "next/link";
-import { conference, masterclasses, songs, speakers } from "@/content/conference";
+import { conference, masterclasses, songBlocks, speakers } from "@/content/conference";
 import { Hero } from "@/components/hero";
-import { LiveNow } from "@/components/live-now";
+import { FeedbackForm } from "@/components/feedback-form";
 import { MyPlan } from "@/components/my-plan";
 import { ProgramOverview } from "@/components/timeline";
 import { Collage, Scribble } from "@/components/deco";
 import { Button, Container, Section, SectionHead } from "@/components/ui";
-import {
-  IconArrow,
-  IconCheck,
-  IconClock,
-  IconGrid,
-  IconMusic,
-  IconUsers,
-} from "@/components/icons";
-
-const quick = [
-  { href: "/program/", label: "Программа", Icon: IconClock },
-  { href: "/masterclasses/", label: "Мастер-классы", Icon: IconGrid },
-  { href: "/songs/", label: "Прославление", Icon: IconMusic },
-  { href: "/#speakers", label: "Спикеры", Icon: IconUsers },
-];
+import { IconArrow, IconMusic } from "@/components/icons";
 
 export default function Home() {
   return (
     <>
       <Hero />
 
-      {/* Путеводитель участника — то, ради чего сканируют QR-код */}
+      {/* Мой мастер-класс */}
       <Container className="pt-4">
-        <div className="grid gap-3 lg:grid-cols-[1.1fr_1fr] lg:gap-6">
-          <LiveNow />
-          <div className="grid content-start gap-3">
-            <MyPlan />
-            <nav aria-label="Разделы" className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2">
-              {quick.map(({ href, label, Icon }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className="flex min-h-20 flex-col items-center justify-center gap-1.5 rounded-xl bg-white/70 px-1 text-center text-[0.8rem] font-semibold transition-colors hover:bg-white hover:text-cobalt active:scale-[.97]"
-                >
-                  <Icon className="size-6 text-cobalt" />
-                  {label}
-                </Link>
-              ))}
-            </nav>
-          </div>
+        <div className="lg:max-w-xl">
+          <MyPlan />
         </div>
       </Container>
 
@@ -59,16 +30,6 @@ export default function Home() {
             <h3 className="display mt-7 text-2xl text-terra">{conference.whyTitle}</h3>
             <p className="mt-2 max-w-lg leading-relaxed">{conference.why}</p>
             <p className="mt-4 max-w-lg leading-relaxed text-muted">{conference.newThisYear}</p>
-            <ul className="mt-6 grid gap-2.5">
-              {conference.highlights.map((h) => (
-                <li key={h} className="flex items-center gap-3">
-                  <span className="grid size-7 shrink-0 place-items-center rounded-full bg-cobalt/10 text-cobalt">
-                    <IconCheck className="size-4" />
-                  </span>
-                  {h}
-                </li>
-              ))}
-            </ul>
           </div>
           <Collage variant="a">
             <img
@@ -211,17 +172,22 @@ export default function Home() {
               <h2 className="display text-[2.6rem] sm:text-5xl lg:text-6xl">Прославление</h2>
             </div>
             <p className="mt-3 text-muted">Тексты песен, которые мы будем петь вместе.</p>
-            <ol className="mt-6 divide-y divide-line rounded-2xl bg-white/70">
-              {songs.map((s, i) => (
-                <li key={s.slug}>
-                  <Link href={`/songs/${s.slug}/`} className="flex min-h-14 items-center gap-4 px-4 hover:text-cobalt">
-                    <span className="display w-8 text-2xl text-terra tabular-nums">{String(i + 1).padStart(2, "0")}</span>
-                    <span className="flex-1 font-medium">{s.title}</span>
-                    <IconArrow className="size-4 text-muted" />
-                  </Link>
-                </li>
-              ))}
-            </ol>
+            {songBlocks.map((b) => (
+              <div key={b.title} className="mt-6">
+                <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">{b.title}</h3>
+                <ol className="divide-y divide-line rounded-2xl bg-white/70">
+                  {b.songs.map((s, i) => (
+                    <li key={s.slug}>
+                      <Link href={`/songs/${s.slug}/`} className="flex min-h-14 items-center gap-4 px-4 hover:text-cobalt">
+                        <span className="display w-8 text-2xl text-terra tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                        <span className="flex-1 font-medium">{s.title}</span>
+                        <IconArrow className="size-4 text-muted" />
+                      </Link>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ))}
             <div className="mt-6 flex flex-wrap gap-3">
               <Button href="/songs/" variant="outline">
                 Все тексты песен
@@ -243,6 +209,16 @@ export default function Home() {
         </div>
       </Section>
 
+      {/* Отзыв — открывается после окончания конференции */}
+      <Section id="feedback" className="bg-paper-2/60">
+        <div className="mx-auto max-w-2xl">
+          <SectionHead
+            title="Отзыв"
+            lead="Поделитесь, что было для вас важным и что можно сделать лучше. Отзывы помогают нам готовить следующие встречи."
+          />
+          <FeedbackForm />
+        </div>
+      </Section>
     </>
   );
 }

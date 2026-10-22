@@ -3,6 +3,7 @@ import { conference } from "@/content/conference";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { TabBar } from "@/components/tab-bar";
+import { FeedbackPrompt } from "@/components/feedback-prompt";
 import "./globals.css";
 
 // Шрифты лежат в node_modules и раздаются с вашего же домена (без Google Fonts).
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main">{children}</main>
         <Footer />
         <TabBar />
+        <FeedbackPrompt />
       </body>
     </html>
   );

@@ -1,8 +1,7 @@
 import { conference } from "@/content/conference";
 import { Container } from "./ui";
 import { Scribble } from "./deco";
-import { IconCalendar, IconClock, IconPin } from "./icons";
-import Link from "next/link";
+import { LiveNow } from "./live-now";
 
 export function Hero() {
   return (
@@ -49,59 +48,11 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Инфо-полоса */}
-        <div className="relative z-20 -mt-4 rounded-2xl bg-white/90 p-4 shadow-[0_20px_50px_-30px_rgba(0,0,0,.45)] backdrop-blur sm:p-5 lg:-mt-8 lg:flex lg:items-center lg:gap-6 lg:px-8">
-          <div className="grid grid-cols-2 gap-x-4 gap-y-4 lg:flex lg:flex-1 lg:divide-x lg:divide-line">
-            <Fact icon={<IconCalendar />} title={conference.dateHuman} sub={conference.weekday} />
-            <Fact
-              icon={<IconClock />}
-              title={`Регистрация ${conference.registrationStart}`}
-              sub={`Начало ${conference.start}`}
-            />
-            <Fact
-              icon={<IconPin />}
-              title={conference.city}
-              sub={conference.venue}
-              className="col-span-2 lg:col-span-1"
-            />
-          </div>
+        {/* Тёмная карточка: до конференции — дата, время и место; в день — «Сейчас идёт» */}
+        <div className="relative z-20 -mt-4 lg:-mt-8">
+          <LiveNow />
         </div>
       </Container>
     </section>
-  );
-}
-
-function Fact({
-  icon,
-  title,
-  sub,
-  className = "",
-  href,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  sub: string;
-  className?: string;
-  href?: string;
-}) {
-  const inner = (
-    <>
-      <span className="mt-0.5 text-cobalt [&>svg]:size-6">{icon}</span>
-      <span className="min-w-0">
-        <span className="block text-[0.95rem] font-semibold leading-tight sm:text-base">{title}</span>
-        <span className="block truncate text-sm text-muted">{sub}</span>
-      </span>
-    </>
-  );
-  return (
-    <div className={`lg:px-6 lg:first:pl-0 ${className}`}>
-      {href ? (
-        <Link href={href} className="flex gap-3 hover:text-cobalt">
-          {inner}
-        </Link>
-      ) : (
-        <div className="flex gap-3">{inner}</div>
-      )}
-    </div>
   );
 }

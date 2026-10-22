@@ -31,8 +31,11 @@ export function LiveNow() {
         <span className="absolute inset-y-0 right-0 w-1/3 halftone-fade opacity-30 invert" aria-hidden />
         <p className="eyebrow text-sun">{conference.dateHuman} · {conference.weekday}</p>
         <p className="display mt-2 text-4xl text-white">Начало в {conference.start}</p>
+        <p className="mt-1 text-sm text-paper/70">
+          Регистрация с {conference.registrationStart} · {conference.city}, {conference.venue}
+        </p>
         <p className="mt-1 flex items-center gap-1 text-sm text-paper/70">
-          Регистрация участников с {conference.registrationStart} · смотреть программу
+          Смотреть программу
           <IconArrow className="size-4 transition-transform group-hover:translate-x-1" />
         </p>
       </Link>
@@ -40,11 +43,11 @@ export function LiveNow() {
 
   if (state.kind === "after")
     return (
-      <Link href="/masterclasses/" className={`${box} group`}>
+      <Link href="/#feedback" className={`${box} group`}>
         <p className="eyebrow text-sun">Конференция прошла</p>
         <p className="display mt-2 text-3xl text-white">Спасибо, что были с нами!</p>
         <p className="mt-2 flex items-center gap-1 text-sm text-paper/70">
-          Материалы мастер-классов <IconArrow className="size-4 transition-transform group-hover:translate-x-1" />
+          Оставить отзыв <IconArrow className="size-4 transition-transform group-hover:translate-x-1" />
         </p>
       </Link>
     );

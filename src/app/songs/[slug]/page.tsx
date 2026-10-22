@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { songs } from "@/content/conference";
 import { Container, PageHeader } from "@/components/ui";
 import { IconArrow, IconBack } from "@/components/icons";
+import { getLyrics } from "@/lib/lyrics";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -25,7 +26,7 @@ export default async function SongPage({ params }: Props) {
   const s = songs[i];
   const prev = songs[i - 1];
   const next = songs[i + 1];
-  const stanzas = s.lyrics?.trim().split(/\n\s*\n/) ?? [];
+  const stanzas = getLyrics(s.slug);
 
   return (
     <>
@@ -34,9 +35,12 @@ export default async function SongPage({ params }: Props) {
         {stanzas.length ? (
           <div className="space-y-7 text-[1.25rem] leading-[1.6] sm:text-2xl">
             {stanzas.map((st, k) => (
-              <p key={k} className="whitespace-pre-line">
-                {st}
-              </p>
+              <div key={k}>
+                {st.label && (
+                  <p className="mb-1 text-xs font-bold uppercase tracking-[0.14em] text-terra sm:text-sm">{st.label}</p>
+                )}
+                {st.lines.length > 0 && <p className="whitespace-pre-line">{st.lines.join("\n")}</p>}
+              </div>
             ))}
           </div>
         ) : (

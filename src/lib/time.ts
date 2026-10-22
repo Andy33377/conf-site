@@ -81,3 +81,13 @@ export function fmtMin(m: number) {
   const h = Math.floor(m / 60), r = m % 60;
   return r ? `${h} ч ${r} мин` : `${h} ч`;
 }
+
+/** Время, с которого открывается форма отзыва: конец последнего пункта программы */
+export const feedbackOpensAt = schedule[schedule.length - 1].end;
+
+/** Форма отзыва открыта после окончания конференции (в её часовом поясе) */
+export function isFeedbackOpen(): boolean {
+  const { date, minutes } = nowInConferenceTz();
+  if (date !== conference.date) return date > conference.date;
+  return minutes >= toMin(feedbackOpensAt);
+}
