@@ -2,10 +2,10 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { conference, masterclasses } from "@/content/conference";
-import { feedbackOpensAt, isFeedbackOpen } from "@/lib/time";
+import { feedbackOpensAt, feedbackSent, isFeedbackOpen, markFeedbackSent } from "@/lib/time";
 import { IconCheck } from "./icons";
 
-/** Куда уходят отзывы: Formspree (или любой сервис, принимающий POST с FormData и отвечающий JSON) */
+/** Куда уходят отзывы: веб-приложение Google Apps Script (scripts/feedback-telegram.gs) → Google Таблица + Telegram */
 const ENDPOINT = process.env.NEXT_PUBLIC_FEEDBACK_ENDPOINT ?? "";
 
 type Status = "idle" | "sending" | "sent" | "error";
@@ -15,8 +15,8 @@ const field =
 const label = "mb-1.5 block text-sm font-semibold";
 
 /**
- * Форма отзыва. Открывается после окончания конференции (31 октября, после заключительной молитвы).
- * До этого — карточка «форма откроется …». Проверка: /feedback/?now=2026-10-31T16:40
+ * Форма отзыва. Открыта 31 октября с 10:00 (с начала конференции) и после.
+ * До этого — карточка «форма откроется …». Проверка: /feedback/?now=2026-10-31T10:05
  */
 export function FeedbackForm() {
   const [open, setOpen] = useState<boolean | null>(null);
@@ -24,6 +24,7 @@ export function FeedbackForm() {
   const [rating, setRating] = useState(0);
 
   useEffect(() => {
+    if (feedbackSent()) setStatus("sent");
     const tick = () => setOpen(isFeedbackOpen());
     tick();
     const id = setInterval(tick, 30_000);
@@ -37,12 +38,12 @@ export function FeedbackForm() {
   if (!open)
     return (
       <div className={card}>
-        <p className="eyebrow text-terra">Скоро</p>
+        <p className="eyebrow text-terra">Отзыв о конференции</p>
         <p className="display mt-2 text-3xl">
           Форма откроется {conference.dateHuman.replace(/ \d{4}$/, "")} в {feedbackOpensAt}
         </p>
         <p className="mt-2 text-muted">
-          Сразу после заключительной молитвы здесь можно будет оставить отзыв о конференции. Будем рады каждому слову!
+          В день конференции здесь можно будет поделиться впечатлениями, пожеланиями и замечаниями.
         </p>
       </div>
     );
@@ -55,6 +56,16 @@ export function FeedbackForm() {
         </span>
         <p className="display mt-4 text-3xl">Спасибо за отзыв!</p>
         <p className="mt-2 text-muted">Мы обязательно его прочитаем. Благословений!</p>
+        <button
+          type="button"
+          onClick={() => {
+            setRating(0);
+            setStatus("idle");
+          }}
+          className="mt-4 text-sm font-semibold text-cobalt hover:underline"
+        >
+          Написать ещё один отзыв
+        </button>
       </div>
     );
 
@@ -68,10 +79,14 @@ export function FeedbackForm() {
     try {
       const res = await fetch(ENDPOINT, {
         method: "POST",
-        body: new FormData(e.currentTarget),
+        // URL-кодированные поля: их понимают и Google Apps Script, и Formspree; запрос без preflight (CORS)
+        body: new URLSearchParams(new FormData(e.currentTarget) as unknown as Record<string, string>),
         headers: { Accept: "application/json" },
       });
-      setStatus(res.ok ? "sent" : "error");
+      if (res.ok) {
+        markFeedbackSent();
+        setStatus("sent");
+      } else setStatus("error");
     } catch {
       setStatus("error");
     }
@@ -79,6 +94,10 @@ export function FeedbackForm() {
 
   return (
     <form onSubmit={onSubmit} className={`${card} grid gap-5`}>
+      <p className="text-muted">
+        Форма открыта с {conference.dateHuman.replace(/ \d{4}$/, "")}, {feedbackOpensAt}. Напишите, что вам запомнилось,
+        ваши пожелания и замечания — это поможет сделать следующие встречи ещё лучше.
+      </p>
       <input type="hidden" name="_subject" value={`Отзыв о конференции «${conference.title}»`} />
       {/* Ловушка для спам-ботов: люди это поле не видят */}
       <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden />

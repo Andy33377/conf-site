@@ -3,44 +3,59 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { isFeedbackOpen } from "@/lib/time";
+import { feedbackSent, isFeedbackPromptTime } from "@/lib/time";
 
-const KEY = "feedback-prompt-seen";
+const DONE_KEY = "feedback-prompt-done"; // «Я уже оставил(а) отзыв»
+const SNOOZE_KEY = "feedback-prompt-snooze"; // до какого времени не беспокоить
+const SNOOZE_MIN = 30;
+
+function read(key: string) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+function write(key: string, v: string) {
+  try {
+    localStorage.setItem(key, v);
+  } catch {}
+}
 
 /**
- * Всплывающее окно «Оставьте отзыв» — появляется само, когда открывается форма отзыва
- * (31 октября в 16:35), даже если страница уже открыта. Показывается один раз:
- * после «Оставить отзыв» или «Позже» больше не беспокоит.
- * Проверка: /?now=2026-10-31T16:40 (сбросить — очистить данные сайта в браузере)
+ * Напоминание об отзыве — 31 октября в 16:35, после заключительной молитвы.
+ * Появляется само, даже если страница уже открыта. Не показывается тем, кто уже отправил
+ * отзыв с этого устройства или нажал «Я уже оставил(а) отзыв».
+ * «Напомнить позже» — снова через 30 минут.
+ * Проверка: /?now=2026-10-31T16:40 (сбросить — очистить данные сайта или открыть в режиме инкогнито)
  */
 export function FeedbackPrompt() {
   const path = usePathname() || "/";
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    let seen = false;
-    try {
-      seen = localStorage.getItem(KEY) === "1";
-    } catch {}
-    if (seen) return;
     const tick = () => {
-      if (isFeedbackOpen()) setShow(true);
+      if (read(DONE_KEY) === "1" || feedbackSent()) return setShow(false);
+      if (Date.now() < Number(read(SNOOZE_KEY) ?? 0)) return;
+      if (isFeedbackPromptTime()) setShow(true);
     };
     tick();
     const id = setInterval(tick, 30_000);
     return () => clearInterval(id);
   }, []);
 
-  const close = () => {
+  const snooze = () => {
+    write(SNOOZE_KEY, String(Date.now() + SNOOZE_MIN * 60_000));
     setShow(false);
-    try {
-      localStorage.setItem(KEY, "1");
-    } catch {}
+  };
+  const done = () => {
+    write(DONE_KEY, "1");
+    setShow(false);
   };
 
   useEffect(() => {
     if (!show) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && snooze();
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [show]);
@@ -49,7 +64,10 @@ export function FeedbackPrompt() {
   if (!show || path.startsWith("/feedback")) return null;
 
   return (
-    <div className="fixed inset-0 z-[90] flex items-end justify-center bg-ink/50 p-4 backdrop-blur-sm sm:items-center" onClick={close}>
+    <div
+      className="fixed inset-0 z-[90] flex items-end justify-center bg-ink/50 p-4 backdrop-blur-sm sm:items-center"
+      onClick={snooze}
+    >
       <div
         role="dialog"
         aria-modal="true"
@@ -60,23 +78,30 @@ export function FeedbackPrompt() {
         <p className="eyebrow text-terra">Конференция завершилась</p>
         <h2 id="fb-prompt-title" className="display mt-2 text-4xl">Спасибо, что были с нами!</h2>
         <p className="mt-3 text-muted">
-          Нам очень важно ваше мнение. Пожалуйста, уделите пару минут и оставьте отзыв: что было полезным, что
-          коснулось сердца и что можно сделать лучше. Это поможет подготовить следующие встречи.
+          Если вы ещё не оставили отзыв — пожалуйста, уделите пару минут. Напишите, что было полезным, ваши пожелания
+          и замечания. Это поможет нам сделать следующие встречи ещё лучше.
         </p>
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        <div className="mt-6 grid gap-3">
           <Link
             href="/feedback/"
-            onClick={close}
+            onClick={snooze}
             className="inline-flex min-h-12 items-center justify-center rounded-full bg-cobalt px-6 font-semibold text-white hover:bg-cobalt-dark"
           >
             Оставить отзыв
           </Link>
           <button
             type="button"
-            onClick={close}
-            className="inline-flex min-h-12 items-center justify-center rounded-full border-2 border-line px-6 font-semibold text-muted hover:border-ink hover:text-ink"
+            onClick={done}
+            className="inline-flex min-h-12 items-center justify-center rounded-full border-2 border-cobalt px-6 font-semibold text-cobalt hover:bg-cobalt hover:text-white"
           >
-            Позже
+            Я уже оставил(а) отзыв
+          </button>
+          <button
+            type="button"
+            onClick={snooze}
+            className="inline-flex min-h-10 items-center justify-center text-sm font-semibold text-muted hover:text-ink"
+          >
+            Напомнить позже
           </button>
         </div>
       </div>

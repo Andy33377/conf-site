@@ -82,12 +82,33 @@ export function fmtMin(m: number) {
   return r ? `${h} ч ${r} мин` : `${h} ч`;
 }
 
-/** Время, с которого открывается форма отзыва: конец последнего пункта программы */
-export const feedbackOpensAt = schedule[schedule.length - 1].end;
+/** Форма отзыва открыта с начала конференции */
+export const feedbackOpensAt = conference.start;
+/** Напоминание об отзыве — в конце последнего пункта программы */
+export const feedbackPromptAt = schedule[schedule.length - 1].end;
 
-/** Форма отзыва открыта после окончания конференции (в её часовом поясе) */
-export function isFeedbackOpen(): boolean {
+function reached(hhmm: string): boolean {
   const { date, minutes } = nowInConferenceTz();
   if (date !== conference.date) return date > conference.date;
-  return minutes >= toMin(feedbackOpensAt);
+  return minutes >= toMin(hhmm);
+}
+
+/** Форма отзыва открыта (31 октября с 10:00 и дальше) */
+export const isFeedbackOpen = () => reached(feedbackOpensAt);
+/** Пора напоминать об отзыве (31 октября с 16:35 и дальше) */
+export const isFeedbackPromptTime = () => reached(feedbackPromptAt);
+
+/** Отметка «отзыв уже отправлен с этого устройства» — общая для формы и напоминания */
+export const FEEDBACK_SENT_KEY = "feedback-sent";
+export function feedbackSent(): boolean {
+  try {
+    return localStorage.getItem(FEEDBACK_SENT_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+export function markFeedbackSent() {
+  try {
+    localStorage.setItem(FEEDBACK_SENT_KEY, "1");
+  } catch {}
 }
