@@ -5,7 +5,7 @@ import { masterclasses } from "@/content/conference";
 import { Container, PageHeader } from "@/components/ui";
 import { Collage } from "@/components/deco";
 import { ChooseButton } from "@/components/my-plan";
-import { IconArrow, IconClock, IconPin, IconUsers } from "@/components/icons";
+import { IconArrow, IconClock, IconUsers } from "@/components/icons";
 import { Notes } from "@/components/notes";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -45,7 +45,6 @@ export default async function MasterclassPage({ params }: Props) {
           <p className="text-lg leading-relaxed">{m.description}</p>
           <ul className="mt-6 grid gap-3 rounded-2xl bg-white p-4">
             <Row icon={<IconClock />} label="Время" value={m.time} />
-            <Row icon={<IconPin />} label="Где" value={m.room} />
             <Row icon={<IconUsers />} label="Ведущий" value={m.host} />
           </ul>
           <p className="mt-5 text-sm text-muted">

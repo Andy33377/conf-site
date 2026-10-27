@@ -132,7 +132,6 @@ export type Masterclass = {
   short: string;
   description: string;
   host: string;
-  room: string;
   time: string;
   image: string;
   forWhom: string;
@@ -141,7 +140,6 @@ export type Masterclass = {
 };
 
 const mcTime = "12:15–13:15";
-const room = "Аудитория уточняется";
 
 export const masterclasses: Masterclass[] = [
   {
@@ -153,7 +151,6 @@ export const masterclasses: Masterclass[] = [
     forWhom:
       "Молодёжным лидерам, руководителям и тем, кто готовится к лидерскому служению.",
     host: "Гости из Германии",
-    room,
     time: mcTime,
     image: "/img/mc-leadership.webp",
   },
@@ -165,7 +162,6 @@ export const masterclasses: Masterclass[] = [
       "Зачем системно изучать Библию, как читать её с пониманием и какие есть пути для духовного образования и роста.",
     forWhom: "Всем, кто хочет глубже понимать Писание.",
     host: "Игорь Семёнов",
-    room,
     time: mcTime,
     image: "/img/mc-education.webp",
   },
@@ -177,7 +173,6 @@ export const masterclasses: Masterclass[] = [
       "Что такое душепопечительство, как выслушать человека в трудной ситуации, поддержать его Словом Божьим и молитвой и при этом сохранить собственное сердце.",
     forWhom: "Тем, кто служит людям: лидерам, служителям и всем, кто хочет научиться поддерживать других.",
     host: "Валентин Кирка",
-    room,
     time: mcTime,
     image: "/img/mc-preaching.webp",
   },
@@ -189,7 +184,6 @@ export const masterclasses: Masterclass[] = [
       "Трансляции, звук, свет, соцсети и дизайн — как использовать современные технологии, чтобы служить Церкви и доносить Евангелие.",
     forWhom: "Тем, кто служит в медиа, звуке, трансляциях или соцсетях церкви.",
     host: "Кристина Плукчи",
-    room,
     time: mcTime,
     image: "/img/mc-media.webp",
   },
@@ -201,7 +195,6 @@ export const masterclasses: Masterclass[] = [
       "Служение в воскресной школе и христианских лагерях: как говорить с детьми и подростками о Боге, готовить занятия и быть для них примером.",
     forWhom: "Учителям воскресной школы, вожатым и всем, кто служит детям.",
     host: "Жетта Георгиу",
-    room,
     time: mcTime,
     image: "/img/mc-children.webp",
   },
@@ -213,7 +206,6 @@ export const masterclasses: Masterclass[] = [
       "Служение хора и группы прославления, подготовка к богослужению и сердце музыканта, который служит Богу и церкви.",
     forWhom: "Певцам хора, музыкантам и участникам групп прославления.",
     host: "Вадим Кирка и Александр Орлов",
-    room,
     time: mcTime,
     image: "/img/worship.webp",
   },

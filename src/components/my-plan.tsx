@@ -66,7 +66,7 @@ export function MyPlan() {
         <span className="eyebrow block text-cobalt">Мой мастер-класс</span>
         <span className="display mt-1 block text-2xl">{mc.title}</span>
         <span className="block truncate text-sm text-muted">
-          {mc.time} · {mc.room}
+          {mc.time} · {mc.host}
         </span>
       </span>
       <IconArrow className="size-5 text-cobalt transition-transform group-hover:translate-x-1" />
