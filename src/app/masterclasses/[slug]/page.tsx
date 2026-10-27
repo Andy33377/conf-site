@@ -6,6 +6,7 @@ import { Container, PageHeader } from "@/components/ui";
 import { Collage } from "@/components/deco";
 import { ChooseButton } from "@/components/my-plan";
 import { IconArrow, IconClock, IconPin, IconUsers } from "@/components/icons";
+import { Notes } from "@/components/notes";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -77,6 +78,8 @@ export default async function MasterclassPage({ params }: Props) {
               </p>
             )}
           </section>
+
+          <Notes id={`mc-${m.slug}`} title={`Мастер-класс «${m.title}» — ${m.host}`} />
         </div>
       </Container>
       <Container className="pb-12">
