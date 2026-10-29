@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { conference } from "@/content/conference";
-import { fmtMin, getLiveState, type LiveState } from "@/lib/time";
-import { IconArrow } from "./icons";
+import { cafeOpenNow, fmtMin, getLiveState, type LiveState } from "@/lib/time";
+import { IconArrow, IconCoffee } from "./icons";
 
 /**
  * «Сейчас идёт / Далее». До конференции — обратный отсчёт, после — ссылка на записи.
@@ -24,6 +24,14 @@ export function LiveNow() {
     "relative flex min-h-[112px] flex-col justify-center overflow-hidden rounded-2xl bg-ink p-5 text-paper shadow-[0_18px_40px_-24px_rgba(0,0,0,.6)]";
 
   if (!state) return <div className={box} aria-hidden />;
+
+  // «Кафе открыто до …» — во время работы кафе (перерывы, обед, регистрация)
+  const cafe = cafeOpenNow();
+  const cafeLine = cafe && (
+    <p className="mt-3 inline-flex items-center gap-1.5 self-start rounded-full bg-sun/15 px-3 py-1 text-sm font-semibold text-sun">
+      <IconCoffee className="size-4" /> Кафе открыто до {cafe.end}
+    </p>
+  );
 
   if (state.kind === "before")
     return (
@@ -49,6 +57,7 @@ export function LiveNow() {
         <p className="mt-2 flex items-center gap-1 text-sm text-paper/70">
           Оставить отзыв <IconArrow className="size-4 transition-transform group-hover:translate-x-1" />
         </p>
+        {cafeLine}
       </Link>
     );
 
@@ -61,6 +70,7 @@ export function LiveNow() {
           {state.next.start}–{state.next.end}
           {state.next.place && ` · ${state.next.place}`}
         </p>
+        {cafeLine}
       </Link>
     );
 
@@ -85,6 +95,7 @@ export function LiveNow() {
           <span className="text-paper/50">Далее в {next.start}:</span> {next.title}
         </p>
       )}
+      {cafeLine}
     </Link>
   );
 }

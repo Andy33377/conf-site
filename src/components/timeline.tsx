@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState, type ElementType } from "react";
 import { program, schedule } from "@/content/conference";
-import { getLiveState } from "@/lib/time";
-import { IconChevron } from "./icons";
+import { cafeSlotFor, getLiveState } from "@/lib/time";
+import { IconChevron, IconCoffee } from "./icons";
 
 /** Индекс текущего пункта и последнего завершённого (в плоском списке schedule) */
 function useProgress() {
@@ -50,6 +50,7 @@ export function Timeline() {
               const first = ii === 0;
               const last = ii === block.items.length - 1;
               const Row = (item.href ? Link : "div") as ElementType;
+              const cafe = cafeSlotFor(item);
               return (
                 <li key={item.start} className="grid grid-cols-[3.6rem_1.25rem_1fr] sm:grid-cols-[5rem_2rem_1fr]">
                   <time
@@ -86,6 +87,15 @@ export function Timeline() {
                         {item.start}–{item.end}
                         {item.note && ` · ${item.note}`}
                       </span>
+                      {cafe && (
+                        <span
+                          className={`mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.7rem] font-semibold ${
+                            isNow ? "bg-white/15 text-white" : "bg-ochre/15 text-ink"
+                          }`}
+                        >
+                          <IconCoffee className="size-3.5" /> Кафе открыто {cafe.start}–{cafe.end}
+                        </span>
+                      )}
                     </span>
                     {item.href && <IconChevron className="size-5 shrink-0 opacity-60" />}
                   </Row>

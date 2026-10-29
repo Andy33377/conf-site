@@ -1,4 +1,4 @@
-import { conference, schedule, type ScheduleItem } from "@/content/conference";
+import { cafeHours, conference, schedule, type ScheduleItem } from "@/content/conference";
 
 const toMin = (hhmm: string) => {
   const [h, m] = hhmm.split(":").map(Number);
@@ -111,4 +111,16 @@ export function markFeedbackSent() {
   try {
     localStorage.setItem(FEEDBACK_SENT_KEY, "1");
   } catch {}
+}
+
+/** Окно работы кафе, которое пересекается с пунктом программы (для плашки в расписании) */
+export function cafeSlotFor(item: { start: string; end: string }) {
+  return cafeHours.find((c) => toMin(c.start) < toMin(item.end) && toMin(c.end) > toMin(item.start));
+}
+
+/** Открыто ли кафе прямо сейчас (только в день конференции) — возвращает окно или null */
+export function cafeOpenNow() {
+  const { date, minutes } = nowInConferenceTz();
+  if (date !== conference.date) return null;
+  return cafeHours.find((c) => minutes >= toMin(c.start) && minutes < toMin(c.end)) ?? null;
 }

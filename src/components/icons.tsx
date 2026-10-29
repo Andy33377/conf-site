@@ -71,3 +71,6 @@ export const IconCheck = (p: P) => (
 export const IconFood = (p: P) => (
   <svg {...base(p)}><path d="M7 3v8a2 2 0 0 0 4 0V3M9 11v10M17 3c-2 0-3 2.5-3 6s1 4 3 4v8" /></svg>
 );
+export const IconCoffee = (p: P) => (
+  <svg {...base(p)}><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V9Z" /><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17" /><path d="M8 3.5v2.5M12 3.5v2.5" /></svg>
+);
