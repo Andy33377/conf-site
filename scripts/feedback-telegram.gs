@@ -4,7 +4,7 @@
  *
  * Свойства скрипта (Настройки проекта → Свойства скрипта):
  *   TELEGRAM_TOKEN   — токен бота от @BotFather
- *   TELEGRAM_CHAT_ID — куда присылать (узнать: запустить findChatId)
+ *   TELEGRAM_CHAT_ID — куда присылать; несколько чатов — через запятую (узнать id: запустить findChatId)
  */
 
 const SHEET_NAME = 'Отзывы';
@@ -129,15 +129,28 @@ function format_(p) {
   return lines.join('\n').slice(0, 4000); // лимит Telegram — 4096 символов
 }
 
-/** Одна попытка отправки. true — отправлено, false — Telegram просит подождать (429) */
+/** Отправка во все чаты из TELEGRAM_CHAT_ID (через запятую).
+ *  true — ушло хотя бы в один чат, false — Telegram просит подождать (429) во всех */
 function sendTelegram_(text) {
   const url = 'https://api.telegram.org/bot' + prop_('TELEGRAM_TOKEN') + '/sendMessage';
-  const payload = { chat_id: prop_('TELEGRAM_CHAT_ID'), text: text, parse_mode: 'HTML', disable_web_page_preview: true };
-  const res = UrlFetchApp.fetch(url, { method: 'post', payload: payload, muteHttpExceptions: true });
-  const code = res.getResponseCode();
-  if (code === 200) return true;
-  if (code === 429) return false;
-  throw new Error(code + ' ' + res.getContentText());
+  const ids = prop_('TELEGRAM_CHAT_ID').split(',').map(function (x) { return x.trim(); }).filter(Boolean);
+  let sent = 0, limited = 0, lastError = '';
+  ids.forEach(function (id) {
+    const payload = { chat_id: id, text: text, parse_mode: 'HTML', disable_web_page_preview: true };
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const res = UrlFetchApp.fetch(url, { method: 'post', payload: payload, muteHttpExceptions: true });
+      const code = res.getResponseCode();
+      if (code === 200) { sent++; return; }
+      if (code === 429 && attempt === 0) { Utilities.sleep(1500); continue; }
+      if (code === 429) { limited++; return; }
+      lastError = id + ': ' + code + ' ' + res.getContentText();
+      console.error('Telegram ' + lastError);
+      return;
+    }
+  });
+  if (sent) return true;
+  if (limited) return false;
+  throw new Error(lastError || 'Telegram: не удалось отправить');
 }
 
 function prop_(key) {
