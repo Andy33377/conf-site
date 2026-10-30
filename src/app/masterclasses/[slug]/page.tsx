@@ -56,6 +56,25 @@ export default async function MasterclassPage({ params }: Props) {
 
           <section className="mt-10">
             <h2 className="display text-3xl">Материалы</h2>
+            {m.presentation && (
+              <figure className="mt-3 overflow-hidden rounded-2xl bg-white">
+                <img
+                  src={m.presentation.src}
+                  alt={m.presentation.alt}
+                  width={m.presentation.width}
+                  height={m.presentation.height}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full"
+                />
+                <figcaption className="flex items-center justify-between gap-3 px-4 py-3 text-sm text-muted">
+                  <span>Презентация ведущего</span>
+                  <a href={m.presentation.src} download className="font-semibold text-cobalt hover:underline">
+                    Скачать
+                  </a>
+                </figcaption>
+              </figure>
+            )}
             {m.materials?.length ? (
               <ul className="mt-3 divide-y divide-line overflow-hidden rounded-2xl bg-white">
                 {m.materials.map((f) => (
@@ -71,7 +90,7 @@ export default async function MasterclassPage({ params }: Props) {
                   </li>
                 ))}
               </ul>
-            ) : (
+            ) : m.presentation ? null : (
               <p className="mt-3 rounded-2xl border-2 border-dashed border-line p-5 text-muted">
                 Презентации и конспекты от ведущего появятся здесь.
               </p>

@@ -145,6 +145,8 @@ export type Masterclass = {
   forWhom: string;
   /** Материалы от ведущего: презентации, конспекты, ссылки */
   materials?: { title: string; url: string }[];
+  /** Презентация одной длинной картинкой (для телефона): путь в public/ и размеры */
+  presentation?: { src: string; width: number; height: number; alt: string };
 };
 
 const mcTime = "12:15–13:15";
@@ -205,6 +207,12 @@ export const masterclasses: Masterclass[] = [
     host: "Жетта Георгиу",
     time: mcTime,
     image: "/img/mc-children.webp",
+    presentation: {
+      src: "/img/mc-children-presentation.webp",
+      width: 1080,
+      height: 6090,
+      alt: "Презентация «Служение детям во славу Господа»",
+    },
   },
   {
     slug: "music",
