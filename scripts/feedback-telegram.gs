@@ -16,6 +16,7 @@ const STATUS_COL = FIELDS.length + 2; // колонка «Telegram»
 function doPost(e) {
   const p = (e && e.parameter) || {};
   if (p._gotcha) return json({ ok: true }); // спам-бот заполнил скрытое поле — молча игнорируем
+  if (p._type === 'masterclass') return masterclassChoice_(p);
 
   const row = [new Date()].concat(FIELDS.map(function (f) { return String(p[f] || '').slice(0, 5000); }), ['…']);
 
@@ -100,6 +101,70 @@ function findChatId() {
     }
   });
   if (!Object.keys(seen).length) console.log('Пусто. Напишите боту любое сообщение (в группе — /start@имя_бота) и запустите ещё раз.');
+}
+
+// ——— подсчёт: кто на какой мастер-класс идёт ———
+// Лист «Клики» — каждое нажатие «Я иду / отменить» (журнал).
+// Лист «Выбор» — по одной строке на телефон, только последний выбор.
+// Лист «Итого» — сколько человек идёт на каждый мастер-класс (считается сам).
+
+function masterclassChoice_(p) {
+  const device = String(p.device || '').slice(0, 64);
+  if (!device) return json({ ok: false });
+  const title = String(p.title || '').slice(0, 200);
+  const now = new Date();
+  const t = Number(p.t) || now.getTime(); // время нажатия на телефоне
+
+  const lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+    const log = sheetWith_(ss, 'Клики', ['Время', 'Устройство', 'Действие', 'Мастер-класс', 'Источник']);
+    log.appendRow([now, device, title ? 'выбрал' : 'отменил', title, String(p.source || '')]);
+
+    const choice = sheetWith_(ss, 'Выбор', ['Устройство', 'Мастер-класс', 'Обновлено', 'Нажато (мс)']);
+    const last = choice.getLastRow();
+    const rows = last > 1 ? choice.getRange(2, 1, last - 1, 4).getValues() : [];
+    let row = -1;
+    for (let i = 0; i < rows.length; i++) if (rows[i][0] === device) { row = i; break; }
+    if (row < 0) {
+      if (title) choice.appendRow([device, title, now, t]);
+    } else if (!(Number(rows[row][3]) > t)) {
+      // более старое нажатие, пришедшее позже нового, игнорируем
+      choice.getRange(row + 2, 2, 1, 3).setValues([[title, now, t]]);
+    }
+
+    summary_(ss);
+  } finally {
+    lock.releaseLock();
+  }
+  return json({ ok: true });
+}
+
+function summary_(ss) {
+  if (ss.getSheetByName('Итого')) return;
+  const sh = ss.insertSheet('Итого', 0);
+  sh.getRange('A1').setFormula(
+    "=QUERY('Выбор'!A:B, \"select B, count(A) where B <> '' group by B order by count(A) desc label B 'Мастер-класс', count(A) 'Идут'\", 1)"
+  );
+  sh.getRange('D1').setValue('Всего выбрали');
+  sh.getRange('E1').setFormula("=COUNTIF('Выбор'!B2:B, \"?*\")");
+  sh.getRange('G1').setValue('Всего кликов');
+  sh.getRange('H1').setFormula("=MAX(0, COUNTA('Клики'!A:A) - 1)");
+  sh.getRange('A1:H1').setFontWeight('bold');
+  sh.setColumnWidth(1, 260);
+}
+
+function sheetWith_(ss, name, headers) {
+  let sh = ss.getSheetByName(name);
+  if (!sh) sh = ss.insertSheet(name);
+  if (sh.getLastRow() === 0) {
+    sh.appendRow(headers);
+    sh.setFrozenRows(1);
+    sh.getRange(1, 1, 1, headers.length).setFontWeight('bold');
+  }
+  return sh;
 }
 
 // ——— вспомогательное ———

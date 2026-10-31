@@ -1,12 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { masterclasses } from "@/content/conference";
 import { IconArrow, IconCheck, IconPlus } from "./icons";
 
 const KEY = "conf:masterclass";
 const EVT = "conf:masterclass-change";
+/** Что последним успешно ушло в таблицу (чтобы досылать неотправленное) */
+const SYNCED = "conf:masterclass-synced";
+const DEVICE = "conf:device";
+
+/** Тот же Google Apps Script, что и для отзывов (scripts/feedback-telegram.gs) */
+const ENDPOINT = process.env.NEXT_PUBLIC_FEEDBACK_ENDPOINT ?? "";
 
 function read(): string | null {
   try {
@@ -21,7 +27,51 @@ export function saveMasterclass(slug: string | null) {
     else localStorage.removeItem(KEY);
   } catch {}
   window.dispatchEvent(new Event(EVT));
+  void report(slug, "клик");
 }
+
+function deviceId(): string {
+  let id = localStorage.getItem(DEVICE);
+  if (!id) {
+    id = crypto.randomUUID?.() ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem(DEVICE, id);
+  }
+  return id;
+}
+
+/** Отправляет текущий выбор в Google Таблицу. Одно устройство = один человек:
+ *  в таблице хранится только его последний выбор, поэтому повторные клики не завышают счёт. */
+async function report(slug: string | null, source: "клик" | "досылка") {
+  if (!ENDPOINT) return;
+  try {
+    const mc = masterclasses.find((m) => m.slug === slug);
+    const res = await fetch(ENDPOINT, {
+      method: "POST",
+      body: new URLSearchParams({
+        _type: "masterclass",
+        device: deviceId(),
+        slug: slug ?? "",
+        title: mc?.title ?? "",
+        source,
+        t: String(Date.now()), // порядок нажатий: старый запрос не перезапишет новый выбор
+      }),
+      keepalive: true,
+    });
+    if (res.ok && (localStorage.getItem(KEY) ?? "") === (slug ?? "")) localStorage.setItem(SYNCED, slug ?? "");
+  } catch {}
+}
+
+/** Если выбор ещё не дошёл до таблицы (нет сети, или выбрали до подключения подсчёта) — дослать */
+function useSyncChoice() {
+  useEffect(() => {
+    try {
+      const current = localStorage.getItem(KEY) ?? "";
+      const synced = localStorage.getItem(SYNCED);
+      if (synced === null ? current : synced !== current) void report(current || null, "досылка");
+    } catch {}
+  }, []);
+}
+
 function subscribe(cb: () => void) {
   window.addEventListener(EVT, cb);
   window.addEventListener("storage", cb);
@@ -36,6 +86,7 @@ export function useMyMasterclass() {
 
 /** Блок «Моя конференция» на главной */
 export function MyPlan() {
+  useSyncChoice();
   const slug = useMyMasterclass();
   const mc = masterclasses.find((m) => m.slug === slug);
 
@@ -76,6 +127,7 @@ export function MyPlan() {
 
 /** Кнопка «Я иду» на странице мастер-класса */
 export function ChooseButton({ slug }: { slug: string }) {
+  useSyncChoice();
   const current = useMyMasterclass();
   const chosen = current === slug;
   return (
