@@ -147,6 +147,8 @@ export type Masterclass = {
   materials?: { title: string; url: string }[];
   /** Презентация одной длинной картинкой (для телефона): путь в public/ и размеры */
   presentation?: { src: string; width: number; height: number; alt: string };
+  /** Презентация по слайдам (картинки одного размера) и PDF для скачивания */
+  slides?: { title: string; images: string[]; width: number; height: number; pdf?: string };
 };
 
 const mcTime = "12:15–13:15";
@@ -196,6 +198,13 @@ export const masterclasses: Masterclass[] = [
     host: "Кристина Плукчи",
     time: mcTime,
     image: "/img/mc-media.webp",
+    slides: {
+      title: "Медиаслужение: соцсети в церкви",
+      images: Array.from({ length: 28 }, (_, i) => `/img/mc-media-slides/mc-media-${String(i + 1).padStart(2, "0")}.webp`),
+      width: 1280,
+      height: 720,
+      pdf: "/files/mediasluzhenie-presentation.pdf",
+    },
   },
   {
     slug: "children",

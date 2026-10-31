@@ -75,6 +75,32 @@ export default async function MasterclassPage({ params }: Props) {
                 </figcaption>
               </figure>
             )}
+            {m.slides && (
+              <div className="mt-3 overflow-hidden rounded-2xl bg-white">
+                <div className="grid gap-1 bg-line">
+                  {m.slides.images.map((src, i) => (
+                    <img
+                      key={src}
+                      src={src}
+                      alt={`${m.slides!.title} — слайд ${i + 1}`}
+                      width={m.slides!.width}
+                      height={m.slides!.height}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full"
+                    />
+                  ))}
+                </div>
+                <div className="flex items-center justify-between gap-3 px-4 py-3 text-sm text-muted">
+                  <span>Презентация ведущего · {m.slides.images.length} слайдов</span>
+                  {m.slides.pdf && (
+                    <a href={m.slides.pdf} download className="font-semibold text-cobalt hover:underline">
+                      Скачать PDF
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
             {m.materials?.length ? (
               <ul className="mt-3 divide-y divide-line overflow-hidden rounded-2xl bg-white">
                 {m.materials.map((f) => (
@@ -90,7 +116,7 @@ export default async function MasterclassPage({ params }: Props) {
                   </li>
                 ))}
               </ul>
-            ) : m.presentation ? null : (
+            ) : m.presentation || m.slides ? null : (
               <p className="mt-3 rounded-2xl border-2 border-dashed border-line p-5 text-muted">
                 Презентации и конспекты от ведущего появятся здесь.
               </p>
