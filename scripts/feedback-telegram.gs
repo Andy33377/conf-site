@@ -142,16 +142,17 @@ function masterclassChoice_(p) {
   return json({ ok: true });
 }
 
+// Разделитель аргументов — «;» (таблица с русской локалью)
 function summary_(ss) {
   if (ss.getSheetByName('Итого')) return;
   const sh = ss.insertSheet('Итого', 0);
   sh.getRange('A1').setFormula(
-    "=QUERY('Выбор'!A:B, \"select B, count(A) where B <> '' group by B order by count(A) desc label B 'Мастер-класс', count(A) 'Идут'\", 1)"
+    "=QUERY('Выбор'!A:B; \"select B, count(A) where B <> '' group by B order by count(A) desc label B 'Мастер-класс', count(A) 'Идут'\"; 1)"
   );
   sh.getRange('D1').setValue('Всего выбрали');
-  sh.getRange('E1').setFormula("=COUNTIF('Выбор'!B2:B, \"?*\")");
+  sh.getRange('E1').setFormula("=COUNTIF('Выбор'!B2:B; \"?*\")");
   sh.getRange('G1').setValue('Всего кликов');
-  sh.getRange('H1').setFormula("=MAX(0, COUNTA('Клики'!A:A) - 1)");
+  sh.getRange('H1').setFormula("=MAX(0; COUNTA('Клики'!A:A) - 1)");
   sh.getRange('A1:H1').setFontWeight('bold');
   sh.setColumnWidth(1, 260);
 }
